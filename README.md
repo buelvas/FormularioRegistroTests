@@ -18,7 +18,7 @@ El formulario de registro está implementado en **HTML** y **JavaScript** y las 
 
 - **Visual Studio 2022** o superior.
 - **.NET 8.0** o superior.
-- **Google Chrome** instalado en tu máquina (necesario para el **ChromeDriver**).
+- **Google Chrome** instalado en tu máquina (necesario para el **ChromeDriver**). Debes tener en cuenta que la versión de tú **Google Chrome** debe coincidir con la versión de **ChromeDriver**.
 
 ## Instalación y Ejecución
 
@@ -31,6 +31,7 @@ git clone https://github.com/buelvas/FormularioRegistroTests.git
 ```
 
 ### 2. Instalar Dependencias
+En primer lugar, debes instalar el SDK de .NET 8: https://dotnet.microsoft.com/en-us/download/dotnet/8.0
 
 Asegúrate de tener **Visual Studio** instalado. Luego, abre el proyecto en **Visual Studio**.
 

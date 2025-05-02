@@ -4,83 +4,160 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Formulario de Registro</title>
-</head>
-<body>
-    <h2>Formulario de Registro</h2>
-    <form id="registroForm">
-        <div>
-            <label for="nombre">Nombre:</label>
-            <input type="text" id="nombre" name="nombre" />
-        </div>
-        <div>
-            <label for="correo">Correo Electrónico:</label>
-            <input type="text" id="correo" name="correo" />
-        </div>
-        <div>
-            <label for="celular">Número de Celular:</label>
-            <input type="text" id="celular" name="celular" />
-        </div>
-        <div>
-            <label for="contraseña">Contraseña:</label>
-            <input type="password" id="contraseña" name="contraseña"  />
-        </div>
-        <button type="submit">Registrar</button>
-    </form>
-
-    <div id="mensaje" style="display:none; color: green;">
-        <p>¡Registro Exitoso!</p>
-    </div>
-
-    <div id="mensajeError" style="display:none; color: red;">
-        <p>Todos los campos son obligatorios o tienen un formato incorrecto.</p>
-    </div>
-
-    <script>
-        // Validación del formulario
-        document.getElementById('registroForm').onsubmit = function(event) {
-            event.preventDefault(); // Prevenir que el formulario se envíe
-
-            const nombre = document.getElementById('nombre').value;
-            const correo = document.getElementById('correo').value;
-            const celular = document.getElementById('celular').value;
-            const contraseña = document.getElementById('contraseña').value;
-
-            // Verificación de campos vacíos
-            if (!nombre || !correo || !celular || !contraseña) {
-                document.getElementById('mensajeError').style.display = 'block';
-                document.getElementById('mensaje').style.display = 'none';
-                return;
-            }
-
-            // Validación del correo
-            const correoRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-            if (!correoRegex.test(correo)) {
-                document.getElementById('mensajeError').textContent = 'Correo electrónico inválido.';
-                document.getElementById('mensajeError').style.display = 'block';
-                document.getElementById('mensaje').style.display = 'none';
-                return;
-            }
-
-            // Validación del número de celular
-            if (celular.length !== 10) {
-                document.getElementById('mensajeError').textContent = 'El número de celular debe tener 10 dígitos.';
-                document.getElementById('mensajeError').style.display = 'block';
-                document.getElementById('mensaje').style.display = 'none';
-                return;
-            }
-
-            // Validación de la contraseña
-            if (contraseña.length < 8) {
-                document.getElementById('mensajeError').textContent = 'La contraseña debe tener al menos 8 caracteres.';
-                document.getElementById('mensajeError').style.display = 'block';
-                document.getElementById('mensaje').style.display = 'none';
-                return;
-            }
-
-            // Si todos los campos son correctos
-            document.getElementById('mensaje').style.display = 'block';
-            document.getElementById('mensajeError').style.display = 'none';
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f4f4f4;
         }
-    </script>
-</body>
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            background: #fff;
+            padding: 20px 30px;
+            max-width: 400px;
+            margin: 0 auto;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+            form div {
+                margin-bottom: 15px;
+            }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+            button[type="submit"]:hover {
+                background-color: #45a049;
+            }
+
+        #mensaje, #mensajeError {
+            max-width: 400px;
+            margin: 20px auto;
+            padding: 15px;
+            border-radius: 5px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        #mensaje {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        #mensajeError {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+    <body>
+        <h2>Formulario de Registro</h2>
+        <form id="registroForm">
+            <div>
+                <label for="nombre">Nombre:</label>
+                <input type="text" id="nombre" name="nombre" />
+            </div>
+            <div>
+                <label for="correo">Correo Electrónico:</label>
+                <input type="text" id="correo" name="correo" />
+            </div>
+            <div>
+                <label for="celular">Número de Celular:</label>
+                <input type="text" id="celular" name="celular" />
+            </div>
+            <div>
+                <label for="contraseña">Contraseña:</label>
+                <input type="password" id="contraseña" name="contraseña" />
+            </div>
+            <button type="submit">Registrar</button>
+        </form>
+
+        <div id="mensaje" style="display:none; color: green;">
+            <p>¡Registro Exitoso!</p>
+        </div>
+
+        <div id="mensajeError" style="display:none; color: red;">
+            <p>Todos los campos son obligatorios o tienen un formato incorrecto.</p>
+        </div>
+
+        <script>
+            // Validación del formulario
+            document.getElementById('registroForm').onsubmit = function (event) {
+                event.preventDefault(); // Prevenir que el formulario se envíe
+
+                const nombre = document.getElementById('nombre').value.trim();
+                const correo = document.getElementById('correo').value.trim();
+                const celular = document.getElementById('celular').value.trim();
+                const contraseña = document.getElementById('contraseña').value.trim();
+
+                // Verificación de campos vacíos
+                if (!nombre || !correo || !celular || !contraseña) {
+                    document.getElementById('mensajeError').style.display = 'block';
+                    document.getElementById('mensaje').style.display = 'none';
+                    return;
+                }
+
+                // Validación del correo
+                const correoRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+                if (!correoRegex.test(correo)) {
+                    document.getElementById('mensajeError').textContent = 'Correo electrónico inválido.';
+                    document.getElementById('mensajeError').style.display = 'block';
+                    document.getElementById('mensaje').style.display = 'none';
+                    return;
+                }
+
+                // Validación del número de celular
+                const celularRegex = /^\d{10}$/;
+                if (!celularRegex.test(celular)) {
+                    document.getElementById('mensajeError').textContent = 'El número de celular debe tener 10 dígitos.';
+                    document.getElementById('mensajeError').style.display = 'block';
+                    document.getElementById('mensaje').style.display = 'none';
+                    return;
+                }
+
+                // Validación de la contraseña
+                const contraseñaSegura = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{8,}$/;
+                if (!contraseñaSegura.test(contraseña)) {
+                    document.getElementById('mensajeError').textContent = 'La contraseña debe tener al menos 8 caracteres, incluyendo letras y números.';
+                    document.getElementById('mensajeError').style.display = 'block';
+                    document.getElementById('mensaje').style.display = 'none';
+                    return;
+                }
+
+                // Si todos los campos son correctos
+                document.getElementById('mensaje').style.display = 'block';
+                document.getElementById('mensajeError').style.display = 'none';
+            }
+        </script>
+    </body>
 </html>
