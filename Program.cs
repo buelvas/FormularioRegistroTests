@@ -2,14 +2,11 @@
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
+using System.Threading;
 
 namespace RegistroAutomatizado
 {
-
     public class FormularioRegistroTests
     {
         IWebDriver driver;
@@ -24,27 +21,35 @@ namespace RegistroAutomatizado
             Console.WriteLine("Iniciando las pruebas automatizadas...");
         }
 
+        private void IrAFormulario()
+        {
+            driver.Manage().Window.Maximize();
+            driver.Navigate().GoToUrl($"file:///{htmlFilePath}");
+        }
+
+        private void LlenarFormulario(string nombre, string correo, string celular, string contrasena)
+        {
+            driver.FindElement(By.Id("nombre")).SendKeys(nombre);
+            driver.FindElement(By.Id("correo")).SendKeys(correo);
+            driver.FindElement(By.Id("celular")).SendKeys(celular);
+            driver.FindElement(By.Id("contraseña")).SendKeys(contrasena);
+            driver.FindElement(By.CssSelector("button[type='submit']")).Click();
+        }
+
         // CP1: Registro con datos válidos
         [Test]
         public void TestRegistroExitoso()
         {
             Console.WriteLine("Ejecutando CP1: Registro con datos válidos");
 
-            driver.Navigate().GoToUrl($"file:///{htmlFilePath}");
-
-            driver.FindElement(By.Id("nombre")).SendKeys("Juan Pérez");
-            driver.FindElement(By.Id("correo")).SendKeys("juan@email.com");
-            driver.FindElement(By.Id("celular")).SendKeys("1234567890");
-            driver.FindElement(By.Id("contraseña")).SendKeys("ContraseñaSegura123");
-            driver.FindElement(By.CssSelector("button[type='submit']")).Click();
+            IrAFormulario();
+            LlenarFormulario("Juan Perez", "juan@email.com", "3211234567", "Segura2024$");
 
             Thread.Sleep(2000);
             var mensaje = driver.FindElement(By.Id("mensaje")).Text;
 
             Console.WriteLine($"Mensaje recibido: {mensaje}");
             Assert.AreEqual("¡Registro Exitoso!", mensaje);
-
-            Console.WriteLine("Prueba exitosa: Registro completado correctamente");
         }
 
         // CP2: Registro con correo y celular inválido
@@ -53,21 +58,14 @@ namespace RegistroAutomatizado
         {
             Console.WriteLine("Ejecutando CP2: Registro con correo y celular inválido");
 
-            driver.Navigate().GoToUrl($"file:///{htmlFilePath}");
-
-            driver.FindElement(By.Id("nombre")).SendKeys("Ana");
-            driver.FindElement(By.Id("correo")).SendKeys("anaemail.com");
-            driver.FindElement(By.Id("celular")).SendKeys("12345");
-            driver.FindElement(By.Id("contraseña")).SendKeys("ContraseñaSegura123");
-            driver.FindElement(By.CssSelector("button[type='submit']")).Click();
+            IrAFormulario();
+            LlenarFormulario("Ana", "anaemail.com", "12345", "Segura2024$");
 
             Thread.Sleep(2000);
             var mensajeError = driver.FindElement(By.Id("mensajeError")).Text;
 
             Console.WriteLine($"Mensaje de error recibido: {mensajeError}");
-
             Assert.AreEqual("Correo electrónico inválido.", mensajeError);
-            Console.WriteLine("Prueba exitosa: Error de correo inválido mostrado correctamente");
         }
 
         // CP3: Registro con contraseña débil
@@ -76,21 +74,14 @@ namespace RegistroAutomatizado
         {
             Console.WriteLine("Ejecutando CP3: Registro con contraseña débil");
 
-            driver.Navigate().GoToUrl($"file:///{htmlFilePath}");
-
-            driver.FindElement(By.Id("nombre")).SendKeys("Luis");
-            driver.FindElement(By.Id("correo")).SendKeys("luis@email.com");
-            driver.FindElement(By.Id("celular")).SendKeys("1234567890");
-            driver.FindElement(By.Id("contraseña")).SendKeys("123");
-            driver.FindElement(By.CssSelector("button[type='submit']")).Click();
+            IrAFormulario();
+            LlenarFormulario("Luis", "luis@email.com", "3211234567", "123");
 
             Thread.Sleep(2000);
             var mensajeError = driver.FindElement(By.Id("mensajeError")).Text;
 
             Console.WriteLine($"Mensaje de error recibido: {mensajeError}");
-
-            Assert.AreEqual("La contraseña debe tener al menos 8 caracteres.", mensajeError);
-            Console.WriteLine("Prueba exitosa: Error de contraseña débil mostrado correctamente");
+            Assert.AreEqual("La contraseña debe tener al menos 8 caracteres, incluyendo letras y números.", mensajeError);
         }
 
         // CP4: Registro con campos vacíos
@@ -99,22 +90,14 @@ namespace RegistroAutomatizado
         {
             Console.WriteLine("Ejecutando CP4: Registro con campos vacíos");
 
-            driver.Navigate().GoToUrl($"file:///{htmlFilePath}");
-
-            driver.FindElement(By.Id("nombre")).Clear();
-            driver.FindElement(By.Id("correo")).Clear();
-            driver.FindElement(By.Id("celular")).Clear();
-            driver.FindElement(By.Id("contraseña")).Clear();
-            driver.FindElement(By.CssSelector("button[type='submit']")).Click();
+            IrAFormulario();
+            LlenarFormulario("", "", "", "");
 
             Thread.Sleep(2000);
             var mensajeError = driver.FindElement(By.Id("mensajeError")).Text;
 
             Console.WriteLine($"Mensaje de error recibido: {mensajeError}");
-
             Assert.AreEqual("Todos los campos son obligatorios o tienen un formato incorrecto.", mensajeError);
-
-            Console.WriteLine("Prueba exitosa: Error mostrado correctamente");
         }
 
         // CP5: Registro con contraseñas especiales y nombres no alfabéticos
@@ -123,21 +106,14 @@ namespace RegistroAutomatizado
         {
             Console.WriteLine("Ejecutando CP5: Registro con contraseñas especiales y nombres no alfabéticos");
 
-            driver.Navigate().GoToUrl($"file:///{htmlFilePath}");
-
-            driver.FindElement(By.Id("nombre")).SendKeys("José-123");
-            driver.FindElement(By.Id("correo")).SendKeys("jose@email.com");
-            driver.FindElement(By.Id("celular")).SendKeys("1234567890");
-            driver.FindElement(By.Id("contraseña")).SendKeys("Contraseña$123");
-            driver.FindElement(By.CssSelector("button[type='submit']")).Click();
+            IrAFormulario();
+            LlenarFormulario("José-123", "jose@email.com", "3211234567", "Contrasena$123");
 
             Thread.Sleep(2000);
             var mensaje = driver.FindElement(By.Id("mensaje")).Text;
 
             Console.WriteLine($"Mensaje recibido: {mensaje}");
-
             Assert.AreEqual("¡Registro Exitoso!", mensaje);
-            Console.WriteLine("Prueba exitosa: Campos especiales aceptados correctamente");
         }
 
         [TearDown]
